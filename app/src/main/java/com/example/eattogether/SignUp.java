@@ -3,12 +3,18 @@ package com.example.eattogether;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.DragEvent;
+import android.util.Base64;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,6 +31,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
@@ -34,6 +43,7 @@ public class SignUp extends AppCompatActivity {
 
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 100;
     public static final int IMG_COD = 101;
+
 
     @BindView(R.id.check_gender)
     TextView checkGender;
@@ -49,6 +59,10 @@ public class SignUp extends AppCompatActivity {
     TextView checkCountry;
     @BindView(R.id.check_re_pass)
     TextView checkRePass;
+    @BindView(R.id.check_name)
+    TextView checkName;
+    @BindView(R.id.check_age)
+    TextView checkAge;
     @BindView(R.id.avatar)
     ImageView avatar;
     @BindView(R.id.edit_avatar)
@@ -60,19 +74,13 @@ public class SignUp extends AppCompatActivity {
     @BindView(R.id.name)
     TextInputEditText name;
     @BindView(R.id.phon_number)
-    TextInputEditText phonNumber;
+    TextInputEditText phoneNumber;
     @BindView(R.id.email)
     TextInputEditText email;
     @BindView(R.id.Password)
-    TextInputEditText Password;
+    TextInputEditText password;
     @BindView(R.id.re_password)
     TextInputEditText rePassword;
-    @BindView(R.id.check_name)
-    TextView checkName;
-    @BindView(R.id.check_age)
-    TextView checkAge;
-    @BindView(R.id.gender)
-    Spinner gender;
     @BindView(R.id.country)
     Spinner country;
     @BindView(R.id.city)
@@ -83,6 +91,11 @@ public class SignUp extends AppCompatActivity {
     AppCompatButton buttonSingup;
     @BindView(R.id.button_login_have_account)
     TextView buttonLoginHaveAccount;
+    @BindView(R.id.gender)
+    Spinner gender;
+
+    SingUpModel user = new SingUpModel();
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -92,14 +105,15 @@ public class SignUp extends AppCompatActivity {
         ButterKnife.bind(this);
         avatar.setOnClickListener(v -> checkPermeation());
         checkFields();
-
     }
 
     void checkFields() {
         name.setOnFocusChangeListener((v, hasFocus) -> {
+            String nameFromField = name.getText().toString();
             if (!hasFocus) {
-                if (!name.getText().toString().equals("")) {
+                if (!nameFromField.equals("")) {
                     checkName.setVisibility(View.VISIBLE);
+                    user.setName(nameFromField);
                 }
             }
         });
@@ -108,21 +122,64 @@ public class SignUp extends AppCompatActivity {
                 int ageFromField = Integer.parseInt(age.getText().toString());
                 if (ageFromField > 13 && ageFromField <= 100) {
                     checkAge.setVisibility(View.VISIBLE);
+                    user.setAge(ageFromField);
                 }
             }
         });
         email.setOnFocusChangeListener((v, hasFocus) -> {
+            String emailFromField = email.getText().toString();
             if (!hasFocus) {
-                if(isValidMail(email.getText().toString())){
+                if (isValidMail(emailFromField)) {
                     checkEmail.setVisibility(View.VISIBLE);
+                    user.setEmailAddress(emailFromField);
+                }
+            }
+        });
+        password.setOnFocusChangeListener((v, hasFocus) -> {
+            String passwordFromField = password.getText().toString();
+            if(!hasFocus){
+                if(passwordFromField.length()<8 &&!isValidPassword(passwordFromField)){
+                    Toast.makeText(this, "not valid", Toast.LENGTH_SHORT).show();
+                    checkPass.setVisibility(View.INVISIBLE);
+                }else{
+                    checkPass.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        rePassword.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (rePassword.length()>=8){
+                    if(rePassword.getText().toString().equals(password.getText().toString())){
+                        Toast.makeText(SignUp.this,""+ rePassword.getText().toString().equals(password.getText().toString()), Toast.LENGTH_SHORT).show();
+                        checkRePass.setVisibility(View.VISIBLE);
+                    }else if(checkRePass.getVisibility()==View.VISIBLE) {
+                        checkRePass.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });
 
     }
 
+    private boolean isValidMobile(String phone) {
+        return Patterns.PHONE.matcher(phone).matches();
+    }
+
     private boolean isValidMail(String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     void checkPermeation() {
@@ -162,10 +219,50 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK && requestCode == IMG_COD) {
-            avatar.setImageURI(data.getData());
-            avatar.setPadding(2, 2, 2, 2);
+            String s = convertUriToBase64(data.getData());
+
+            avatar.setImageBitmap(convertBase64ToBitmap(s));
+            avatar.setPadding(10, 10, 10, 10);
+            avatar.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
     }
+
+    Bitmap convertBase64ToBitmap(String str){
+        byte[] decodedString = Base64.decode(str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    String convertUriToBase64(Uri selectedFile) {
+        Bitmap bitmap = null;
+        String encodedString = null;
+        if (selectedFile != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            byte[] byteArray = outputStream.toByteArray();
+
+            encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        }
+        return encodedString;
+    }
+
+    public static boolean isValidPassword(final String password) {
+        Pattern pattern;
+        Matcher matcher;
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+
+    }
+
 }
