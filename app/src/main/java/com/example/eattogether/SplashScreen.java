@@ -36,8 +36,8 @@ public class SplashScreen extends AppCompatActivity {
         ButterKnife.bind(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         animation = AnimationUtils.loadAnimation(this,R.anim.fadein);
-        ObjectAnimator animation = ObjectAnimator.ofFloat(welcomScreen, "scaleX", 1, 1.5f);
-        ObjectAnimator animation1 = ObjectAnimator.ofFloat(welcomScreen, "scaleY", 1, 1.5f);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(welcomScreen, "scaleX", 1, 3f);
+        ObjectAnimator animation1 = ObjectAnimator.ofFloat(welcomScreen, "scaleY", 1, 3f);
         animation.setDuration(500);
         animation1.setDuration(500);
         (new Handler()).postDelayed((Runnable) () -> {
