@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreen">
+
+    <ImageView
+        android:id="@+id/welcom_screen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center|center_horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/sblash_screen_tv_welcome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_bg" />
+
+    <TextView
+        android:id="@+id/sblash_screen_tv_welcome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Welcome"
+        android:textColor="#2C2C2B"
+        android:textSize="50sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sblash_screen_tv_please_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pleas login to continue"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.395" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sblash_screen_button_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="#FF6E01"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/sblash_screen_tv_please_login"
+        app:layout_constraintStart_toStartOf="@+id/sblash_screen_tv_please_login"
+        app:layout_constraintTop_toBottomOf="@+id/sblash_screen_tv_please_login" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sblash_screen_button_signup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:text="Signup"
+        android:textAllCaps="false"
+        android:textColor="#FF6E01"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/sblash_screen_button_login"
+        app:layout_constraintStart_toStartOf="@+id/sblash_screen_button_login"
+        app:layout_constraintTop_toBottomOf="@+id/sblash_screen_button_login" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
