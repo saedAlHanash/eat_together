@@ -2,8 +2,7 @@ package com.example.eattogether;
 
 import android.os.Bundle;
 import android.view.animation.Animation;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,8 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     Animation fabien;
-    public  static final String BASE_URL = "http://test.tuqaatech.com/";
+    public static final String BASE_URL = "http://test.tuqaatech.com/";
     public static Retrofit retrofit;
+    @BindView(R.id.age1)
+    EditText age1;
 
 
     @Override

@@ -123,6 +123,7 @@
                 android:layout_marginEnd="148dp"
                 android:background="@drawable/back_ground_img_view"
                 android:padding="40dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -180,6 +181,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/age"
+                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
