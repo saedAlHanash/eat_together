@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eattogether.APIs.API;
 import com.example.eattogether.APIs.APIError;
@@ -183,26 +187,34 @@ public class SignUp extends AppCompatActivity {
             }
         });
         email.setOnFocusChangeListener((v, hasFocus) -> {
+
             String emailFromField = email.getText().toString();
             if (!hasFocus) {
                 if (isValidMail(emailFromField)) {
                     checkEmail.setVisibility(View.VISIBLE);
                     user.setEmailAddress(emailFromField);
+                    setIconColor(R.drawable.ic_email,Color.parseColor("#F76700"),email);
                 } else {
                     checkEmail.setVisibility(View.INVISIBLE);
                     user.setEmailAddress("");
+                    setIconColor(R.drawable.ic_email,Color.BLACK,email);
                 }
+            }else {
+                setIconColor(R.drawable.ic_email,Color.GRAY,email);
             }
         });
         password.setOnFocusChangeListener((v, hasFocus) -> {
             String passwordFromField = password.getText().toString();
             if (!hasFocus) {
                 if (passwordFromField.length() < 8 && !isValidPassword(passwordFromField)) {
-                    Toast.makeText(this, "not valid", Toast.LENGTH_SHORT).show();
                     checkPass.setVisibility(View.INVISIBLE);
+                    setIconColor(R.drawable.ic_key,Color.BLACK,password);
                 } else {
+                    setIconColor(R.drawable.ic_key,Color.parseColor("#F76700"),password);
                     checkPass.setVisibility(View.VISIBLE);
                 }
+            }else {
+                setIconColor(R.drawable.ic_key,Color.GRAY,password);
             }
         });
         rePassword.addTextChangedListener(new TextWatcher() {
@@ -221,12 +233,19 @@ public class SignUp extends AppCompatActivity {
                 if (rePassword.length() >= 8) {
                     if (rePassword.getText().toString().equals(password.getText().toString())) {
                         checkRePass.setVisibility(View.VISIBLE);
+                        setIconColor(R.drawable.ic_key,Color.parseColor("#F76700"),rePassword);
                         user.setPassword(password.getText().toString());
                     } else if (checkRePass.getVisibility() == View.VISIBLE) {
                         user.setPassword("");
+                        setIconColor(R.drawable.ic_key,Color.BLACK,rePassword);
                         checkRePass.setVisibility(View.INVISIBLE);
                     }
                 }
+            }
+        });
+        rePassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                setIconColor(R.drawable.ic_key,Color.GRAY,rePassword);
             }
         });
         phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
@@ -394,6 +413,13 @@ public class SignUp extends AppCompatActivity {
                 .setBlurAutoUpdate(true)
                 .setHasFixedTransformationMatrix(true); // Or false if it's in a scrolling container or might be animated
 
+    }
+
+    void setIconColor(int res,int color,TextInputEditText tx){
+
+        Drawable drawable =getApplicationContext().getResources().getDrawable(res);
+        DrawableCompat.setTint(drawable, color); // Set whatever color you want
+        tx.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
     }
 
 }
