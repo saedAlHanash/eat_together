@@ -4,15 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class SingUpModel {
 
-    //      "name": "string",
-//              "gender": 0,
-//              "age": 0,
-//              "cityId": 0,
-//              "phoneNumber": "string",
-//              "emailAddress": "user@example.com",
-//              "password": "string",
-//              "avatar": "string",
-//              "captchaResponse": "string"
     @SerializedName("name")
     String name;
     @SerializedName("gender")
@@ -30,7 +21,21 @@ public class SingUpModel {
     @SerializedName("avatar")
     String avatar;
     @SerializedName("captchaResponse")
-    String captchaResponse;
+    String captchaResponse = "string";
+
+    public SingUpModel() {
+    }
+
+    public SingUpModel(String name, int gender, int age, int cityId, String phoneNumber, String emailAddress, String password, String avatar) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.cityId = cityId;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.password = password;
+        this.avatar = avatar;
+    }
 
     public String getName() {
         return name;
@@ -102,5 +107,20 @@ public class SingUpModel {
 
     public void setCaptchaResponse(String captchaResponse) {
         this.captchaResponse = captchaResponse;
+    }
+
+    @Override
+    public String toString() {
+        return "SingUpModel{" +
+                "name='" + name + '\'' +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", cityId=" + cityId +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", password='" + password + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", captchaResponse='" + captchaResponse + '\'' +
+                '}';
     }
 }

@@ -29,10 +29,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.eattogether.APIs.API;
+import com.example.eattogether.APIs.APIError;
+import com.example.eattogether.APIs.ApiClint;
+import com.example.eattogether.APIs.ProcessRespondedCod;
+import com.example.eattogether.Helper.ConverterImage;
 import com.example.eattogether.Helper.GetCountriesHelper;
 import com.example.eattogether.Models.SingUpModel;
+import com.example.eattogether.Models.SingUpResponseModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,11 +50,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUp extends AppCompatActivity {
 
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 100;
     public static final int IMG_COD = 101;
+    API api = ApiClint.getRetrofitInstance().create(API.class);
+    SingUpModel user = new SingUpModel();
 
     @BindView(R.id.blurView)
     BlurView blurView;
@@ -99,9 +111,6 @@ public class SignUp extends AppCompatActivity {
     TextView buttonLoginHaveAccount;
     @BindView(R.id.gender)
     Spinner gender;
-
-    SingUpModel user = new SingUpModel();
-
     @BindView(R.id.tv_dialog)
     TextView tvDialog;
     @BindView(R.id.tv_dialog1)
@@ -114,9 +123,33 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-        avatar.setOnClickListener(v -> checkPermeation());
         checkFields();
+
         country.setAdapter(GetCountriesHelper.getAllCountries(getApplicationContext()));
+
+        buttonSingup.setOnClickListener(v -> {
+
+            Call<SingUpResponseModel> call = api.registerNewUser(user);
+            call.enqueue(new Callback<SingUpResponseModel>() {
+                @Override
+                public void onResponse(Call<SingUpResponseModel> call, Response<SingUpResponseModel> response) {
+                    if(response.code() == 200)
+                    {
+                        blurViewBackground();
+                        btnDialog.setVisibility(View.VISIBLE);
+                        tvDialog1.setVisibility(View.VISIBLE);
+                        tvDialog.setVisibility(View.VISIBLE);
+                    }
+                    Toast.makeText(SignUp.this, "" + ProcessRespondedCod.processRespondedCod(response), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<SingUpResponseModel> call, Throwable t) {
+                    Toast.makeText(SignUp.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        });
     }
 
     void checkFields() {
@@ -134,10 +167,10 @@ public class SignUp extends AppCompatActivity {
         });
         age.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                int ageFromField=0;
+                int ageFromField = 0;
                 try {
-                    ageFromField  = Integer.parseInt(age.getText().toString());
-                }catch (Exception ignored){
+                    ageFromField = Integer.parseInt(age.getText().toString());
+                } catch (Exception ignored) {
                 }
 
                 if (ageFromField > 13 && ageFromField <= 100) {
@@ -258,6 +291,7 @@ public class SignUp extends AppCompatActivity {
 
             }
         });
+        avatar.setOnClickListener(v -> checkPermeation());
 
     }
 
@@ -306,20 +340,14 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK && requestCode == IMG_COD) {
-            String s = convertUriToBase64(data.getData());
-
-            avatar.setImageBitmap(convertBase64ToBitmap(s));
+            String s = ConverterImage.convertUriToBase64(this, data.getData());
+            user.setAvatar(s);
+            avatar.setImageBitmap(ConverterImage.convertBase64ToBitmap(s));
             avatar.setPadding(10, 10, 10, 10);
             avatar.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
-    }
-
-    Bitmap convertBase64ToBitmap(String str) {
-        byte[] decodedString = Base64.decode(str, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
     String convertUriToBase64(Uri selectedFile) {

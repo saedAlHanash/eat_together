@@ -7,7 +7,7 @@ import com.example.eattogether.APIs.API;
 import com.example.eattogether.APIs.ApiClint;
 import com.example.eattogether.Models.Cities;
 import com.example.eattogether.Models.Countries;
-import com.example.eattogether.Models.Test;
+import com.example.eattogether.Models.AllCountriesModel;
 
 import java.util.ArrayList;
 
@@ -23,18 +23,18 @@ public class GetCountriesHelper {
 
         ArrayList<String> countriesList = new ArrayList<>();
         countriesList.add("Country..");
-        Call<Test> call = api.getAllCountries();
+        Call<AllCountriesModel> call = api.getAllCountries();
 
-        call.enqueue(new Callback<Test>() {
+        call.enqueue(new Callback<AllCountriesModel>() {
             @Override
-            public void onResponse(Call<Test> call, Response<Test> response) {
+            public void onResponse(Call<AllCountriesModel> call, Response<AllCountriesModel> response) {
                 countries = response.body().getCountries();
                 for (int i = 0; i < countries.size(); i++) {
                     countriesList.add(countries.get(i).getCountryName());
                 }
             }
             @Override
-            public void onFailure(Call<Test> call, Throwable t) {
+            public void onFailure(Call<AllCountriesModel> call, Throwable t) {
             }
         });
 

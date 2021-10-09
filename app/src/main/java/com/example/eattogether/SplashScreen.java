@@ -31,19 +31,19 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        super.onCreate(savedInstanceState);setContentView(R.layout.activity_splash_screen);
+
         ButterKnife.bind(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         animation = AnimationUtils.loadAnimation(this,R.anim.fadein);
-        ObjectAnimator animation = ObjectAnimator.ofFloat(welcomScreen, "scaleX", 1, 3f);
-        ObjectAnimator animation1 = ObjectAnimator.ofFloat(welcomScreen, "scaleY", 1, 3f);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(welcomScreen, "scaleX", 1, 1.5f);
+        ObjectAnimator animation1 = ObjectAnimator.ofFloat(welcomScreen, "scaleY", 1, 1.5f);
         animation.setDuration(500);
         animation1.setDuration(500);
         (new Handler()).postDelayed((Runnable) () -> {
             animation.start();
             animation1.start();
-            tvWelcome.setVisibility(View.GONE);
+            tvWelcome.setVisibility(View.INVISIBLE);
             tvPleaseLogin.setVisibility(View.VISIBLE);
             btnLogin.setVisibility(View.VISIBLE);
             btnSignup.setVisibility(View.VISIBLE);
