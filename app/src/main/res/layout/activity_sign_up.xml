@@ -182,11 +182,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/age"
-                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
-                    android:drawablePadding="3dp" />
+                    android:drawablePadding="3dp"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -244,7 +244,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
-                    android:drawablePadding="3dp" />
+                    android:drawablePadding="3dp"
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -271,7 +272,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
-                    android:drawablePadding="3dp" />
+                    android:drawablePadding="3dp"
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -299,7 +301,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
-                    android:drawablePadding="3dp" />
+                    android:drawablePadding="3dp"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -327,7 +330,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="51dp"
                     android:layout_gravity="center"
-                    android:drawablePadding="3dp" />
+                    android:drawablePadding="3dp"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -400,7 +404,6 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/backgroung_spinner"
-                android:entries="@array/city"
                 android:paddingStart="10dp"
                 android:popupBackground="@drawable/backgroung_spinner"
                 app:layout_constraintEnd_toEndOf="@+id/country"
@@ -450,8 +453,10 @@
                 android:background="@drawable/line"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_singup" />
+                app:layout_constraintTop_toBottomOf="@+id/button_singup"
+                app:layout_constraintVertical_bias="0.379" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -500,7 +505,73 @@
                 app:layout_constraintEnd_toEndOf="@+id/city"
                 app:layout_constraintTop_toTopOf="@+id/city" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_dialog"
+        style="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:gravity="center"
+        android:text="Sing in!"
+        android:textColor="#171717"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_dialog1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_dialog1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.342" />
+
+    <TextView
+        android:id="@+id/tv_dialog1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/source_sans_pro"
+        android:gravity="center"
+        android:text="Please sing in \nto continue to the app"
+        android:textColor="#171717"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/btn_dialog"
+        app:layout_constraintStart_toStartOf="@+id/btn_dialog"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dialog" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="#FF6E01"
+        android:text="Done"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dialog1" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </eightbitlab.com.blurview.BlurView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

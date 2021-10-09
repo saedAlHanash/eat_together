@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,11 +14,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Patterns;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,34 +26,31 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.eattogether.APIs.API;
-import com.example.eattogether.APIs.ApiClint;
+import com.example.eattogether.Helper.GetCountriesHelper;
+import com.example.eattogether.Models.SingUpModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class SignUp extends AppCompatActivity {
 
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 100;
     public static final int IMG_COD = 101;
 
+    @BindView(R.id.blurView)
+    BlurView blurView;
     @BindView(R.id.check_gender)
     TextView checkGender;
     @BindView(R.id.check_pass)
@@ -107,7 +102,13 @@ public class SignUp extends AppCompatActivity {
 
     SingUpModel user = new SingUpModel();
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @BindView(R.id.tv_dialog)
+    TextView tvDialog;
+    @BindView(R.id.tv_dialog1)
+    TextView tvDialog1;
+    @BindView(R.id.btn_dialog)
+    AppCompatButton btnDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,30 +116,7 @@ public class SignUp extends AppCompatActivity {
         ButterKnife.bind(this);
         avatar.setOnClickListener(v -> checkPermeation());
         checkFields();
-        user.setGender(0);
-        user.setCityId(1);
-        user.setCaptchaResponse("1234");
-
-        buttonSingup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                API api = ApiClint.getRetrofitInstance().create(API.class);
-                Call<Boolean> call = api.registerNewUser(user);
-                call.enqueue(new Callback<Boolean>() {
-                    @Override
-                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-
-                        Toast.makeText(SignUp.this, ""+response.message()+"  "+response.code(), Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void onFailure(Call<Boolean> call, Throwable t) {
-                        Toast.makeText(SignUp.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
-
+        country.setAdapter(GetCountriesHelper.getAllCountries(getApplicationContext()));
     }
 
     void checkFields() {
@@ -148,8 +126,7 @@ public class SignUp extends AppCompatActivity {
                 if (!nameFromField.equals("")) {
                     checkName.setVisibility(View.VISIBLE);
                     user.setName(nameFromField);
-                }
-                else{
+                } else {
                     checkName.setVisibility(View.INVISIBLE);
                     user.setName("");
                 }
@@ -157,11 +134,16 @@ public class SignUp extends AppCompatActivity {
         });
         age.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                int ageFromField = Integer.parseInt(age.getText().toString());
+                int ageFromField=0;
+                try {
+                    ageFromField  = Integer.parseInt(age.getText().toString());
+                }catch (Exception ignored){
+                }
+
                 if (ageFromField > 13 && ageFromField <= 100) {
                     checkAge.setVisibility(View.VISIBLE);
                     user.setAge(ageFromField);
-                }else {
+                } else {
                     checkAge.setVisibility(View.INVISIBLE);
                     user.setAge(13);
                 }
@@ -173,8 +155,7 @@ public class SignUp extends AppCompatActivity {
                 if (isValidMail(emailFromField)) {
                     checkEmail.setVisibility(View.VISIBLE);
                     user.setEmailAddress(emailFromField);
-                }
-                else {
+                } else {
                     checkEmail.setVisibility(View.INVISIBLE);
                     user.setEmailAddress("");
                 }
@@ -182,11 +163,11 @@ public class SignUp extends AppCompatActivity {
         });
         password.setOnFocusChangeListener((v, hasFocus) -> {
             String passwordFromField = password.getText().toString();
-            if(!hasFocus){
-                if(passwordFromField.length()<8 &&!isValidPassword(passwordFromField)){
+            if (!hasFocus) {
+                if (passwordFromField.length() < 8 && !isValidPassword(passwordFromField)) {
                     Toast.makeText(this, "not valid", Toast.LENGTH_SHORT).show();
                     checkPass.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     checkPass.setVisibility(View.VISIBLE);
                 }
             }
@@ -204,11 +185,11 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (rePassword.length()>=8){
-                    if(rePassword.getText().toString().equals(password.getText().toString())){
+                if (rePassword.length() >= 8) {
+                    if (rePassword.getText().toString().equals(password.getText().toString())) {
                         checkRePass.setVisibility(View.VISIBLE);
                         user.setPassword(password.getText().toString());
-                    }else if(checkRePass.getVisibility()==View.VISIBLE) {
+                    } else if (checkRePass.getVisibility() == View.VISIBLE) {
                         user.setPassword("");
                         checkRePass.setVisibility(View.INVISIBLE);
                     }
@@ -216,20 +197,20 @@ public class SignUp extends AppCompatActivity {
             }
         });
         phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus){
-                if(isValidMobile(phoneNumber.getText().toString())){
+            if (!hasFocus) {
+                if (isValidMobile(phoneNumber.getText().toString())) {
                     checkPhone.setVisibility(View.VISIBLE);
                     user.setPhoneNumber(phoneNumber.getText().toString());
                 }
-            }else {
+            } else {
                 checkPhone.setVisibility(View.INVISIBLE);
                 user.setPhoneNumber("");
             }
         });
-        gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position!=0){
+                if (position != 0) {
                     checkGender.setVisibility(View.VISIBLE);
                     user.setGender(position);
                     return;
@@ -237,6 +218,7 @@ public class SignUp extends AppCompatActivity {
                 checkGender.setVisibility(View.INVISIBLE);
                 user.setGender(0);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -245,13 +227,13 @@ public class SignUp extends AppCompatActivity {
         country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position!=0){
+                if (position != 0) {
                     checkCountry.setVisibility(View.VISIBLE);
-                  //  user.setCounty(position);
+                    city.setAdapter(GetCountriesHelper.getAllCities(position, getApplicationContext()));
                     return;
                 }
                 checkCountry.setVisibility(View.INVISIBLE);
-                //  user.setCounty(0);
+                city.setAdapter(GetCountriesHelper.getAllCities(position, getApplicationContext()));
             }
 
             @Override
@@ -262,7 +244,7 @@ public class SignUp extends AppCompatActivity {
         city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position!=0){
+                if (position != 0) {
                     checkCity.setVisibility(View.VISIBLE);
                     user.setCityId(position);
                     return;
@@ -335,7 +317,7 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    Bitmap convertBase64ToBitmap(String str){
+    Bitmap convertBase64ToBitmap(String str) {
         byte[] decodedString = Base64.decode(str, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
@@ -367,6 +349,22 @@ public class SignUp extends AppCompatActivity {
         matcher = pattern.matcher(password);
 
         return matcher.matches();
+
+    }
+
+    private void blurViewBackground() {
+        float radius = 6f;
+
+        View decorView = getWindow().getDecorView();
+        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
+
+        Drawable windowBackground = decorView.getBackground();
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setBlurAutoUpdate(true)
+                .setHasFixedTransformationMatrix(true); // Or false if it's in a scrolling container or might be animated
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.eattogether;
+package com.example.eattogether.Models;
 
 import com.google.gson.annotations.SerializedName;
 
