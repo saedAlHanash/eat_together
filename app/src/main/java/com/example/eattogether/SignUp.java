@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -28,22 +32,29 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.eattogether.APIs.API;
+import com.example.eattogether.APIs.ApiClint;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SignUp extends AppCompatActivity {
 
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 100;
     public static final int IMG_COD = 101;
-
 
     @BindView(R.id.check_gender)
     TextView checkGender;
@@ -96,7 +107,6 @@ public class SignUp extends AppCompatActivity {
 
     SingUpModel user = new SingUpModel();
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +115,30 @@ public class SignUp extends AppCompatActivity {
         ButterKnife.bind(this);
         avatar.setOnClickListener(v -> checkPermeation());
         checkFields();
+        user.setGender(0);
+        user.setCityId(1);
+        user.setCaptchaResponse("1234");
+
+        buttonSingup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                API api = ApiClint.getRetrofitInstance().create(API.class);
+                Call<Boolean> call = api.registerNewUser(user);
+                call.enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
+                        Toast.makeText(SignUp.this, ""+response.message()+"  "+response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        Toast.makeText(SignUp.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+
     }
 
     void checkFields() {
@@ -115,6 +149,10 @@ public class SignUp extends AppCompatActivity {
                     checkName.setVisibility(View.VISIBLE);
                     user.setName(nameFromField);
                 }
+                else{
+                    checkName.setVisibility(View.INVISIBLE);
+                    user.setName("");
+                }
             }
         });
         age.setOnFocusChangeListener((v, hasFocus) -> {
@@ -123,6 +161,9 @@ public class SignUp extends AppCompatActivity {
                 if (ageFromField > 13 && ageFromField <= 100) {
                     checkAge.setVisibility(View.VISIBLE);
                     user.setAge(ageFromField);
+                }else {
+                    checkAge.setVisibility(View.INVISIBLE);
+                    user.setAge(13);
                 }
             }
         });
@@ -132,6 +173,10 @@ public class SignUp extends AppCompatActivity {
                 if (isValidMail(emailFromField)) {
                     checkEmail.setVisibility(View.VISIBLE);
                     user.setEmailAddress(emailFromField);
+                }
+                else {
+                    checkEmail.setVisibility(View.INVISIBLE);
+                    user.setEmailAddress("");
                 }
             }
         });
@@ -147,8 +192,6 @@ public class SignUp extends AppCompatActivity {
             }
         });
         rePassword.addTextChangedListener(new TextWatcher() {
-
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -163,12 +206,74 @@ public class SignUp extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (rePassword.length()>=8){
                     if(rePassword.getText().toString().equals(password.getText().toString())){
-                        Toast.makeText(SignUp.this,""+ rePassword.getText().toString().equals(password.getText().toString()), Toast.LENGTH_SHORT).show();
                         checkRePass.setVisibility(View.VISIBLE);
+                        user.setPassword(password.getText().toString());
                     }else if(checkRePass.getVisibility()==View.VISIBLE) {
+                        user.setPassword("");
                         checkRePass.setVisibility(View.INVISIBLE);
                     }
                 }
+            }
+        });
+        phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus){
+                if(isValidMobile(phoneNumber.getText().toString())){
+                    checkPhone.setVisibility(View.VISIBLE);
+                    user.setPhoneNumber(phoneNumber.getText().toString());
+                }
+            }else {
+                checkPhone.setVisibility(View.INVISIBLE);
+                user.setPhoneNumber("");
+            }
+        });
+        gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position!=0){
+                    checkGender.setVisibility(View.VISIBLE);
+                    user.setGender(position);
+                    return;
+                }
+                checkGender.setVisibility(View.INVISIBLE);
+                user.setGender(0);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position!=0){
+                    checkCountry.setVisibility(View.VISIBLE);
+                  //  user.setCounty(position);
+                    return;
+                }
+                checkCountry.setVisibility(View.INVISIBLE);
+                //  user.setCounty(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position!=0){
+                    checkCity.setVisibility(View.VISIBLE);
+                    user.setCityId(position);
+                    return;
+                }
+                checkCity.setVisibility(View.INVISIBLE);
+                user.setCityId(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
