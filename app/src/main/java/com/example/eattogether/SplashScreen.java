@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.eattogether.ui.Login;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +31,7 @@ public class SplashScreen extends AppCompatActivity {
     AppCompatButton btnSignup;
     @BindView(R.id.sblash_screen_tv_please_login)
     TextView tvPleaseLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class SplashScreen extends AppCompatActivity {
             startActivity(intent);
         });
         btnLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(this,Login.class);
+            Intent intent = new Intent(this, Login.class);
             startActivity(intent);
         });
     }

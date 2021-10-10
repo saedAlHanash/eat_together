@@ -3,20 +3,12 @@ package com.example.eattogether;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,21 +26,16 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eattogether.APIs.API;
-import com.example.eattogether.APIs.APIError;
 import com.example.eattogether.APIs.ApiClint;
 import com.example.eattogether.APIs.ProcessRespondedCod;
 import com.example.eattogether.Helper.ConverterImage;
 import com.example.eattogether.Helper.GetCountriesHelper;
+import com.example.eattogether.Helper.ValidationHelper;
 import com.example.eattogether.Models.SingUpModel;
 import com.example.eattogether.Models.SingUpResponseModel;
+import com.example.eattogether.ui.Login;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,9 +84,9 @@ public class SignUp extends AppCompatActivity {
     TextInputEditText name;
     @BindView(R.id.phon_number)
     TextInputEditText phoneNumber;
-    @BindView(R.id.email)
+    @BindView(R.id.login_email)
     TextInputEditText email;
-    @BindView(R.id.Password)
+    @BindView(R.id.login_password)
     TextInputEditText password;
     @BindView(R.id.re_password)
     TextInputEditText rePassword;
@@ -109,9 +96,9 @@ public class SignUp extends AppCompatActivity {
     Spinner city;
     @BindView(R.id.checkBox_accept)
     CheckBox checkBoxAccept;
-    @BindView(R.id.button_singup)
+    @BindView(R.id.button_Login)
     AppCompatButton buttonSingup;
-    @BindView(R.id.button_login_have_account)
+    @BindView(R.id.button_singup_dont_have_account)
     TextView buttonLoginHaveAccount;
     @BindView(R.id.gender)
     Spinner gender;
@@ -137,8 +124,7 @@ public class SignUp extends AppCompatActivity {
             call.enqueue(new Callback<SingUpResponseModel>() {
                 @Override
                 public void onResponse(Call<SingUpResponseModel> call, Response<SingUpResponseModel> response) {
-                    if(response.code() == 200)
-                    {
+                    if (response.code() == 200) {
                         blurViewBackground();
                         btnDialog.setVisibility(View.VISIBLE);
                         tvDialog1.setVisibility(View.VISIBLE);
@@ -153,6 +139,11 @@ public class SignUp extends AppCompatActivity {
                 }
             });
 
+        });
+        buttonLoginHaveAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+            this.finish();
         });
     }
 
@@ -190,31 +181,31 @@ public class SignUp extends AppCompatActivity {
 
             String emailFromField = email.getText().toString();
             if (!hasFocus) {
-                if (isValidMail(emailFromField)) {
+                if (ValidationHelper.isValidMail(emailFromField)) {
                     checkEmail.setVisibility(View.VISIBLE);
                     user.setEmailAddress(emailFromField);
-                    setIconColor(R.drawable.ic_email,Color.parseColor("#F76700"),email);
+                    setIconColor(R.drawable.ic_email, Color.parseColor("#F76700"), email);
                 } else {
                     checkEmail.setVisibility(View.INVISIBLE);
                     user.setEmailAddress("");
-                    setIconColor(R.drawable.ic_email,Color.BLACK,email);
+                    setIconColor(R.drawable.ic_email, Color.BLACK, email);
                 }
-            }else {
-                setIconColor(R.drawable.ic_email,Color.GRAY,email);
+            } else {
+                setIconColor(R.drawable.ic_email, Color.GRAY, email);
             }
         });
         password.setOnFocusChangeListener((v, hasFocus) -> {
             String passwordFromField = password.getText().toString();
             if (!hasFocus) {
-                if (passwordFromField.length() < 8 && !isValidPassword(passwordFromField)) {
+                if (ValidationHelper.isValidPassword(passwordFromField)) {
                     checkPass.setVisibility(View.INVISIBLE);
-                    setIconColor(R.drawable.ic_key,Color.BLACK,password);
+                    setIconColor(R.drawable.ic_key, Color.BLACK, password);
                 } else {
-                    setIconColor(R.drawable.ic_key,Color.parseColor("#F76700"),password);
+                    setIconColor(R.drawable.ic_key, Color.parseColor("#F76700"), password);
                     checkPass.setVisibility(View.VISIBLE);
                 }
-            }else {
-                setIconColor(R.drawable.ic_key,Color.GRAY,password);
+            } else {
+                setIconColor(R.drawable.ic_key, Color.GRAY, password);
             }
         });
         rePassword.addTextChangedListener(new TextWatcher() {
@@ -233,24 +224,24 @@ public class SignUp extends AppCompatActivity {
                 if (rePassword.length() >= 8) {
                     if (rePassword.getText().toString().equals(password.getText().toString())) {
                         checkRePass.setVisibility(View.VISIBLE);
-                        setIconColor(R.drawable.ic_key,Color.parseColor("#F76700"),rePassword);
+                        setIconColor(R.drawable.ic_key, Color.parseColor("#F76700"), rePassword);
                         user.setPassword(password.getText().toString());
                     } else if (checkRePass.getVisibility() == View.VISIBLE) {
                         user.setPassword("");
-                        setIconColor(R.drawable.ic_key,Color.BLACK,rePassword);
+                        setIconColor(R.drawable.ic_key, Color.BLACK, rePassword);
                         checkRePass.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         });
         rePassword.setOnFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus){
-                setIconColor(R.drawable.ic_key,Color.GRAY,rePassword);
+            if (hasFocus) {
+                setIconColor(R.drawable.ic_key, Color.GRAY, rePassword);
             }
         });
         phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                if (isValidMobile(phoneNumber.getText().toString())) {
+                if (ValidationHelper.isValidMobile(phoneNumber.getText().toString())) {
                     checkPhone.setVisibility(View.VISIBLE);
                     user.setPhoneNumber(phoneNumber.getText().toString());
                 }
@@ -314,13 +305,6 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    private boolean isValidMobile(String phone) {
-        return Patterns.PHONE.matcher(phone).matches();
-    }
-
-    private boolean isValidMail(String email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 
     void checkPermeation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -369,35 +353,6 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    String convertUriToBase64(Uri selectedFile) {
-        Bitmap bitmap = null;
-        String encodedString = null;
-        if (selectedFile != null) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            byte[] byteArray = outputStream.toByteArray();
-
-            encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        }
-        return encodedString;
-    }
-
-    public static boolean isValidPassword(final String password) {
-        Pattern pattern;
-        Matcher matcher;
-        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$";
-        pattern = Pattern.compile(PASSWORD_PATTERN);
-        matcher = pattern.matcher(password);
-
-        return matcher.matches();
-
-    }
 
     private void blurViewBackground() {
         float radius = 6f;
@@ -415,9 +370,9 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    void setIconColor(int res,int color,TextInputEditText tx){
+    void setIconColor(int res, int color, TextInputEditText tx) {
 
-        Drawable drawable =getApplicationContext().getResources().getDrawable(res);
+        Drawable drawable = getApplicationContext().getResources().getDrawable(res);
         DrawableCompat.setTint(drawable, color); // Set whatever color you want
         tx.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
     }

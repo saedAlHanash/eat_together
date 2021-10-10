@@ -1,6 +1,7 @@
 package com.example.eattogether.APIs;
 
 import com.example.eattogether.Models.AllCountriesModel;
+import com.example.eattogether.Models.LoginModel;
 import com.example.eattogether.Models.SingUpModel;
 import com.example.eattogether.Models.SingUpResponseModel;
 
@@ -16,6 +17,9 @@ public interface API {
 
     @GET("api/services/app/Country/GetAllCountries")
     Call<AllCountriesModel> getAllCountries();
+
+    @POST("api/TokenAuth/Authenticate")
+    Call<LoginResponse> login(@Body LoginModel login);
 
 
 
