@@ -26,8 +26,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eattogether.APIs.API;
-import com.example.eattogether.APIs.ApiClint;
-import com.example.eattogether.APIs.ProcessRespondedCod;
+import com.example.eattogether.APIs.ApiClint.ApiClint;
+import com.example.eattogether.APIs.ResponseModle.ProcessRespondedCod;
 import com.example.eattogether.Helper.ConverterImage;
 import com.example.eattogether.Helper.GetCountriesHelper;
 import com.example.eattogether.Helper.ValidationHelper;

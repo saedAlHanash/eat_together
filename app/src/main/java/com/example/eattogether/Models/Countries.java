@@ -5,35 +5,14 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Countries {
+    @SerializedName("result")
+    ArrayList<Country> countries ;
 
-    @SerializedName("name")
-    String countryName;
-    @SerializedName("id")
-    int countryID;
-    @SerializedName("cities")
-    ArrayList<Cities> cities;
-
-    public String getCountryName() {
-        return countryName;
+    public ArrayList<Country> getCountries() {
+        return countries;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-
-    public int getCountryID() {
-        return countryID;
-    }
-
-    public void setCountryID(int countryID) {
-        this.countryID = countryID;
-    }
-
-    public ArrayList<Cities> getCities() {
-        return cities;
-    }
-
-    public void setCities(ArrayList<Cities> cities) {
-        this.cities = cities;
+    public void setCountries(ArrayList<Country> countries) {
+        this.countries = countries;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.eattogether.APIs;
+package com.example.eattogether.APIs.ResponseModle;
 
 import com.google.gson.Gson;
 

@@ -17,6 +17,15 @@ public class LoginModel {
     @SerializedName("rememberClient")
     boolean rememberClient;
 
+    public LoginModel() {
+    }
+
+    public LoginModel(String userNameOrEmailAddress, String password, boolean rememberClient) {
+        this.userNameOrEmailAddress = userNameOrEmailAddress;
+        this.password = password;
+        this.rememberClient = rememberClient;
+    }
+
     public String getUserNameOrEmailAddress() {
         return userNameOrEmailAddress;
     }

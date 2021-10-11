@@ -1,26 +1,35 @@
 package com.example.eattogether.APIs;
 
-import com.example.eattogether.Models.AllCountriesModel;
+import com.example.eattogether.APIs.ResponseModle.LoginResponse;
+import com.example.eattogether.Models.Countries;
 import com.example.eattogether.Models.LoginModel;
 import com.example.eattogether.Models.SingUpModel;
 import com.example.eattogether.Models.SingUpResponseModel;
+import com.example.eattogether.Models.SingleCountry;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface API {
+
 
     @POST("api/services/app/Account/Register")
     Call<SingUpResponseModel> registerNewUser(@Body SingUpModel user);
 
+
     @GET("api/services/app/Country/GetAllCountries")
-    Call<AllCountriesModel> getAllCountries();
+    Call<Countries> getAllCountries();
+
 
     @POST("api/TokenAuth/Authenticate")
     Call<LoginResponse> login(@Body LoginModel login);
 
+
+    @GET("api/services/app/Country/Get")
+    Call<SingleCountry> getCountry(@Query("id") int id);
 
 
 //    @POST("tms/register.php")

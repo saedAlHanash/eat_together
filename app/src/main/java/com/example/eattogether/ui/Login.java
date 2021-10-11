@@ -1,12 +1,10 @@
 package com.example.eattogether.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.eattogether.APIs.API;
-import com.example.eattogether.APIs.ApiClint;
-import com.example.eattogether.APIs.LoginResponse;
-import com.example.eattogether.APIs.ProcessRespondedCod;
-import com.example.eattogether.Helper.ValidationHelper;
+import com.example.eattogether.APIs.ApiClint.ApiClint;
+import com.example.eattogether.APIs.ResponseModle.LoginResponse;
+import com.example.eattogether.APIs.ResponseModle.ProcessRespondedCod;
+import com.example.eattogether.AppConfig;
 import com.example.eattogether.Models.LoginModel;
 import com.example.eattogether.R;
 import com.example.eattogether.SignUp;
@@ -32,7 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
-
     LoginModel loginModel = new LoginModel();
     API api = ApiClint.getRetrofitInstance().create(API.class);
     @BindView(R.id.login_email)
@@ -54,10 +51,9 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        AppConfig.getSharedPreferencesInstance(this);
         ButterKnife.bind(this);
         listener();
-        //Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
-
     }
 
     void listener() {
@@ -75,38 +71,23 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.code()!=200){
-                        //Toast.makeText(Login.this, ""+response.code(), Toast.LENGTH_SHORT).show();
                         Toast.makeText(Login.this, ""+ ProcessRespondedCod.processRespondedCod(response), Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(Login.this, ""+response.body().getResult().getUserId()+"ok", Toast.LENGTH_SHORT).show();
+                        AppConfig.spEdit.putString(AppConfig.TOKEN,response.body().getResult().getAccessToken());
+                        AppConfig.spEdit.putInt(AppConfig.USER_ID,response.body().getResult().getUserId());
+                        AppConfig.spEdit.apply();
+                        Toast.makeText(Login.this, ""+AppConfig.get_USER_ID(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Login.this,Home.class);
                         startActivity(intent);
                     }
                 }
-
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "login failure"+t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 
-
-//            if(ValidationHelper.isValidPassword(loginPassword.getText().toString())){
-//                loginModel.setPassword(loginPassword.getText().toString());
-//            }else {
-//                textInputLayoutPass.setError("wrong password...");
-//            }
-//
-//            if (ValidationHelper.isValidMail(loginEmail.getText().toString())) {
-//                loginModel.setUserNameOrEmailAddress(loginEmail.getText().toString());
-//            } else {
-//                textInputLayoutEmail.setError("wrong email...");
-//            }
-//            textInputLayoutEmail.clearFocus();
-//            textInputLayoutPass.clearFocus();
-//
-//            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
         });
         loginEmail.addTextChangedListener(new TextWatcher() {
             @Override

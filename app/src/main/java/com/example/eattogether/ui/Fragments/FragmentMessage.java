@@ -1,4 +1,4 @@
-package com.example.eattogether;
+package com.example.eattogether.ui.Fragments;
 
 import android.os.Bundle;
 
@@ -8,17 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FragmentHome extends Fragment {
+import com.example.eattogether.R;
+
+public class FragmentMessage extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.home_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_message, container, false);
     }
 }
