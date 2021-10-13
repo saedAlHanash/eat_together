@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="Gender">
+        <item>Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+    </array>
+
+    <array name="country">
+        <item>Country</item>
+        <item>Syria</item>
+        <item>Jordan</item>
+        <item>U.A.E</item>
+        <item>S.A</item>
+        <item>Egypt</item>
+    </array>
+    <array name="city">
+        <item>City</item>
+        <item>damascus</item>
+        <item>Aleppo</item>
+        <item>Daraa</item>
+    </array>
+</resources>
