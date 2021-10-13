@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.eattogether.ui.Home;
 import com.example.eattogether.ui.Login;
 
 import butterknife.BindView;
@@ -36,6 +37,12 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);setContentView(R.layout.activity_splash_screen);
+        AppConfig.getSharedPreferencesInstance(this);
+        if(!AppConfig.get_ACCESS_TOKEN().equals("")){
+            Intent intent = new Intent(getBaseContext(), Home.class);
+            startActivity(intent);
+            finish();
+        }
 
         ButterKnife.bind(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -106,8 +106,9 @@ public class SignUp extends AppCompatActivity {
     TextView tvDialog;
     @BindView(R.id.tv_dialog1)
     TextView tvDialog1;
-    @BindView(R.id.btn_dialog)
-    AppCompatButton btnDialog;
+    @BindView(R.id.button_done)
+    AppCompatButton buttonDone;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +127,7 @@ public class SignUp extends AppCompatActivity {
                 public void onResponse(Call<SingUpResponseModel> call, Response<SingUpResponseModel> response) {
                     if (response.code() == 200) {
                         blurViewBackground();
-                        btnDialog.setVisibility(View.VISIBLE);
+                        buttonDone.setVisibility(View.VISIBLE);
                         tvDialog1.setVisibility(View.VISIBLE);
                         tvDialog.setVisibility(View.VISIBLE);
                     }
@@ -197,7 +198,7 @@ public class SignUp extends AppCompatActivity {
         password.setOnFocusChangeListener((v, hasFocus) -> {
             String passwordFromField = password.getText().toString();
             if (!hasFocus) {
-                if (ValidationHelper.isValidPassword(passwordFromField)) {
+                if (!ValidationHelper.isValidPassword(passwordFromField)) {
                     checkPass.setVisibility(View.INVISIBLE);
                     setIconColor(R.drawable.ic_key, Color.BLACK, password);
                 } else {
@@ -302,6 +303,11 @@ public class SignUp extends AppCompatActivity {
             }
         });
         avatar.setOnClickListener(v -> checkPermeation());
+        buttonDone.setOnClickListener(v -> {
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+            this.finish();
+        });
 
     }
 

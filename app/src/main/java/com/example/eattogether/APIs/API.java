@@ -2,10 +2,13 @@ package com.example.eattogether.APIs;
 
 import com.example.eattogether.APIs.ResponseModle.LoginResponse;
 import com.example.eattogether.Models.Countries;
+import com.example.eattogether.Models.FindPartnersModel;
 import com.example.eattogether.Models.LoginModel;
 import com.example.eattogether.Models.SingUpModel;
 import com.example.eattogether.Models.SingUpResponseModel;
 import com.example.eattogether.Models.SingleCountry;
+
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -30,6 +33,15 @@ public interface API {
 
     @GET("api/services/app/Country/Get")
     Call<SingleCountry> getCountry(@Query("id") int id);
+
+    @GET("api/services/app/CityPartner/GetAllCityPartners")
+    Call<FindPartnersModel> findPartnersModel(@Query("CityId") int CityId,
+                                              @Query("Gender") int Gender,
+                                              @Query("MinAge") int MinAge,
+                                              @Query("MaxAge") int MaxAge,
+                                              @Query("SkipCount") int SkipCount,
+                                              @Query("Date") String  Date,
+                                              @Query("MaxResultCount") int MaxResultCount);
 
 
 //    @POST("tms/register.php")

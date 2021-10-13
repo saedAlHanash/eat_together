@@ -26,9 +26,9 @@ public class AppConfig {
     public static SharedPreferences.Editor spEdit;
     public static String get_ACCESS_TOKEN(){
         if (sp==null){
-            return " ";
+            return "";
         }
-         return sp.getString(TOKEN," ");
+         return sp.getString(TOKEN,"");
     }
     public static int get_USER_ID(){
         if (sp==null){

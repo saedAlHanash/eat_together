@@ -553,12 +553,12 @@
         android:textColor="#171717"
         android:textSize="20sp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/btn_dialog"
-        app:layout_constraintStart_toStartOf="@+id/btn_dialog"
+        app:layout_constraintEnd_toEndOf="@+id/button_done"
+        app:layout_constraintStart_toStartOf="@+id/button_done"
         app:layout_constraintTop_toBottomOf="@+id/tv_dialog" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_dialog"
+        android:id="@+id/button_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"

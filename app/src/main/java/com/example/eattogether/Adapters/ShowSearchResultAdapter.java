@@ -6,19 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.eattogether.R;
-
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class ShowSearchResultAdapter extends RecyclerView.Adapter<ShowSearchResultAdapter.Holder> {
-    ArrayList<String> list;
+    ArrayList<String> list = new ArrayList<>() ;
     onRecyclerViewClickListener RecyclerListener;
     Context context;
 

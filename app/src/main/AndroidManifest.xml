@@ -14,18 +14,17 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.EatTogether">
         <activity android:name=".ui.Home">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.Login"></activity>
         <activity
             android:name=".SignUp"
             android:windowSoftInputMode="stateVisible|adjustPan"></activity>
         <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity" >
 

@@ -80,6 +80,7 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, ""+AppConfig.get_USER_ID(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Login.this,Home.class);
                         startActivity(intent);
+                        Login.this.finish();
                     }
                 }
                 @Override
