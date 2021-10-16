@@ -10,10 +10,12 @@ import com.example.eattogether.Models.SingleCountry;
 
 import java.util.Date;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface API {
@@ -43,6 +45,8 @@ public interface API {
                                               @Query("Date") String  Date,
                                               @Query("MaxResultCount") int MaxResultCount);
 
+    @GET("api/services/app/UserInformation/DownloadImage/{id}/")
+    Call<ResponseBody> downloadImage(@Path("id") int idUser);
 
 //    @POST("tms/register.php")
 //    Call<ApiResponse> insertUser(@Body User user);

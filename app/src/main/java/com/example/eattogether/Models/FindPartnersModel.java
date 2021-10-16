@@ -22,8 +22,23 @@ public class FindPartnersModel {
     @SerializedName("success")
     boolean success;
 
+    public ArrayList<ResultFindPartnersModel> getResult() {
+        return result;
+    }
 
-    class ResultFindPartnersModel {
+    public void setResult(ArrayList<ResultFindPartnersModel> result) {
+        this.result = result;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+  public  class ResultFindPartnersModel {
 
 
             /*    [
@@ -61,7 +76,19 @@ public class FindPartnersModel {
         @SerializedName("cityName")
         String cityName;
 
-        public int getId() {
+      public ResultFindPartnersModel(int id, int userId, int cityId, int minAge, int maxAge, int gender, String date, String userName, String cityName) {
+          this.id = id;
+          this.userId = userId;
+          this.cityId = cityId;
+          this.minAge = minAge;
+          this.maxAge = maxAge;
+          this.gender = gender;
+          this.date = date;
+          this.userName = userName;
+          this.cityName = cityName;
+      }
+
+      public int getId() {
             return id;
         }
 

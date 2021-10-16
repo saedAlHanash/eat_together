@@ -8,6 +8,7 @@
     app:cardCornerRadius="20dp">
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/searsh_result_btn_send_message"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginStart="16dp"

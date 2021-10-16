@@ -14,11 +14,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.eattogether.AppConfig;
+import com.example.eattogether.Models.FindPartnersModel;
 import com.example.eattogether.R;
 import com.example.eattogether.ui.Fragments.FragmentHome;
 import com.example.eattogether.ui.Fragments.FragmentMessage;
 import com.example.eattogether.ui.Fragments.FragmentResultSearch;
 import com.example.eattogether.ui.Fragments.FragmentSearch;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,9 +85,9 @@ public class Home extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void replaceFragment(){
+    public void replaceFragment(ArrayList<FindPartnersModel.ResultFindPartnersModel> model){
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        FragmentResultSearch mFrag = new FragmentResultSearch();
+        FragmentResultSearch mFrag = new FragmentResultSearch(model);
         t.replace(R.id.fragment, mFrag);
         t.addToBackStack(null);
         t.commit();

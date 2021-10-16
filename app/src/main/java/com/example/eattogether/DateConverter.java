@@ -1,5 +1,7 @@
 package com.example.eattogether;
 
+import android.widget.DatePicker;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +13,7 @@ public class DateConverter {
     public static String dateToString(Date date) {
         DateFormat dateFormat;
 
-             dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
+             dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
             return dateFormat.format(date);
 
     }
@@ -19,14 +21,14 @@ public class DateConverter {
     public static Date stringToDate(String sDate) {
         Date date = new Date();
         try {
-            date = new SimpleDateFormat("dd-MM-yyyy HH:mm",Locale.ENGLISH).parse(sDate);
+            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ",Locale.ENGLISH).parse(sDate);
         } catch (Exception ignored) {
         }
         return date;
     }
 
     public static String findDifference (Date dateStart, Date dateEnd) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ",Locale.ENGLISH);
         long difference_In_Time = dateEnd.getTime() - dateStart.getTime();
 /*
                 long difference_In_Seconds = (difference_In_Time / 1000) % 60;
@@ -44,4 +46,12 @@ public class DateConverter {
         return dateToString(Calendar.getInstance().getTime());
     }
 
+    public static Date getDateFromDatePicker(DatePicker paramDatePicker, int hour, int minute) {
+        int day = paramDatePicker.getDayOfMonth();
+        int month = paramDatePicker.getMonth();
+        int Year = paramDatePicker.getYear();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Year, month, day, hour, minute, 0);
+        return calendar.getTime();
+    }
 }
