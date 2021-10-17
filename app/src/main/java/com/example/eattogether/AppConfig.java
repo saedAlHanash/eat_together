@@ -21,21 +21,25 @@ import retrofit2.Response;
 public class AppConfig {
     static boolean isLogin = false;
     public static final String TOKEN = "token";
-    public static final String  USER_ID = "userId";
+    public static final String USER_ID = "userId";
     public static SharedPreferences sp;
     public static SharedPreferences.Editor spEdit;
-    public static String get_ACCESS_TOKEN(){
-        if (sp==null){
+
+
+    public static String get_ACCESS_TOKEN() {
+        if (sp == null) {
             return "";
         }
-         return sp.getString(TOKEN,"");
+        return sp.getString(TOKEN, "");
     }
-    public static int get_USER_ID(){
-        if (sp==null){
+
+    public static int get_USER_ID() {
+        if (sp == null) {
             return 0;
         }
-         return sp.getInt(USER_ID,0);
+        return sp.getInt(USER_ID, 0);
     }
+
     public static SharedPreferences getSharedPreferencesInstance(Context context) {
         if (sp == null) {
             sp = PreferenceManager.getDefaultSharedPreferences(context);

@@ -12,10 +12,15 @@ public class DateConverter {
 
     public static String dateToString(Date date) {
         DateFormat dateFormat;
-
              dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
             return dateFormat.format(date);
 
+    }
+    public static String formatDate(String date){
+
+        DateFormat dateFormat;
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        return dateFormat.format(DateConverter.stringToDate(date));
     }
 
     public static Date stringToDate(String sDate) {

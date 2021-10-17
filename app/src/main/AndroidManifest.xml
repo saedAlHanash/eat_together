@@ -13,22 +13,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.EatTogether">
-        <activity android:name=".ui.Home">
+        <activity android:name=".ui.Chat">
+
         </activity>
-        <activity android:name=".ui.Login"></activity>
+        <activity android:name=".ui.Home"></activity>
+        <activity android:name=".ui.Login" />
         <activity
             android:name=".SignUp"
-            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity android:name=".SplashScreen">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" >
-
-        </activity>
+        <activity android:name=".ui.MainActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

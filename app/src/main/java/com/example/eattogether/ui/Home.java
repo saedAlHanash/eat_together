@@ -39,8 +39,6 @@ public class Home extends AppCompatActivity {
     @BindView(R.id.image_home)
     ImageView imageHome;
 
-    NavController navController;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,11 +71,12 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    void restColor(){
+    void restColor() {
         imageHome.setColorFilter(Color.BLACK);
         imageSearch.getBackground().setTint(Color.BLACK);
         imageMessage.setColorFilter(Color.BLACK);
     }
+
     void navigateFragment(Fragment fragment) {
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -85,7 +84,7 @@ public class Home extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void replaceFragment(ArrayList<FindPartnersModel.ResultFindPartnersModel> model){
+    public void replaceFragment(ArrayList<FindPartnersModel.ResultFindPartnersModel> model) {
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         FragmentResultSearch mFrag = new FragmentResultSearch(model);
         t.replace(R.id.fragment, mFrag);
